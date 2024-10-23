@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Empréstimo</title>
+    <style>
+        body {
+            font-family: 'serif';
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #333;
+            color: #ffffff;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #explicacao {
+            background-color: #867676c2;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: justify;
+            margin-bottom: 30px;
+            width: 80%;
+        }
+
+        #container {
+            background-color: #867676c2;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 400px;
+            margin-bottom: 20px;
+        }
+
+        #inputs {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        label {
+            margin-bottom: 5px;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        input[type="number"] {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 12px 25px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #resultados {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        #resultados p {
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+        }
+
+        #resultados span {
+            color: #333;
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simulador de Empréstimo</h1>
+
+    <div id="explicacao">
+        <h2>Entendendo Juros Simples e Compostos</h2>
+        <p>
+            Os juros são um valor adicional cobrado sobre um empréstimo ou investimento. 
+            Existem dois tipos principais de juros: simples e compostos.
+        </p>
+        <h3>Juros Simples</h3>
+        <p>
+            No juros simples, o valor dos juros é calculado apenas sobre o valor principal do empréstimo. 
+            Ou seja, a taxa de juros é aplicada apenas ao valor inicial, e não sobre os juros acumulados.
+        </p>
+        <p>
+            **Exemplo:** Imagine que você empresta R$ 1.000,00 a uma taxa de juros simples de 1% ao mês.
+            Após um mês, você receberá R$ 10,00 de juros (1% de R$ 1.000,00).
+            No segundo mês, você receberá mais R$ 10,00 de juros, e assim por diante.
+            O valor total dos juros após dois meses será de R$ 20,00.
+        </p>
+        <h3>Juros Compostos</h3>
+        <p>
+            No juros compostos, a taxa de juros é aplicada sobre o valor principal do empréstimo mais os juros acumulados. 
+            Ou seja, os juros são capitalizados, ou seja, são adicionados ao valor principal do empréstimo, e os juros do próximo período são calculados sobre esse novo valor.
+        </p>
+        <p>
+            **Exemplo:** Imagine que você empresta R$ 1.000,00 a uma taxa de juros compostos de 1% ao mês.
+            Após um mês, você receberá R$ 10,00 de juros (1% de R$ 1.000,00).
+            No segundo mês, a taxa de juros será aplicada sobre o valor principal de R$ 1.000,00 mais os R$ 10,00 de juros acumulados, totalizando R$ 1.010,00.
+            Assim, você receberá R$ 10,10 de juros (1% de R$ 1.010,00).
+            O valor total dos juros após dois meses será de R$ 20,10.
+        </p>
+        <p>
+            Observe que, no juros compostos, o valor dos juros cresce exponencialmente, pois a taxa de juros é aplicada sobre um valor cada vez maior.
+        </p>
+    </div>
+
+    <div id="container">
+        <h1>Simulador de Empréstimo</h1>
+        <div id="inputs">
+            <label for="valor">Valor do Empréstimo:</label>
+            <input type="number" id="valor" min="1" required>
+            <label for="taxa">Taxa de Juros (a.m.):</label>
+            <input type="number" id="taxa" min="0" step="0.01" required>
+            <label for="prazo">Prazo (meses):</label>
+            <input type="number" id="prazo" min="1" required>
+            <button id="calcular">Calcular</button>
+        </div>
+        <div id="resultados">
+            <h2>Resultados:</h2>
+            <p>Juros Simples: <span id="jurosSimples"></span></p>
+            <p>Valor Total (Simples): <span id="valorTotalSimples"></span></p>
+            <p>Juros Composto: <span id="jurosComposto"></span></p>
+            <p>Valor Total (Composto): <span id="valorTotalComposto"></span></p>
+        </div>
+    </div>
+
+    <script>
+        const valorInput = document.getElementById('valor');
+        const taxaInput = document.getElementById('taxa');
+        const prazoInput = document.getElementById('prazo');
+        const calcularButton = document.getElementById('calcular');
+
+        const jurosSimplesSpan = document.getElementById('jurosSimples');
+        const valorTotalSimplesSpan = document.getElementById('valorTotalSimples');
+        const jurosCompostoSpan = document.getElementById('jurosComposto');
+        const valorTotalCompostoSpan = document.getElementById('valorTotalComposto');
+
+        calcularButton.addEventListener('click', () => {
+            const valor = parseFloat(valorInput.value);
+            const taxa = parseFloat(taxaInput.value) / 100; // Taxa em decimal
+            const prazo = parseInt(prazoInput.value);
+
+            // Juros Simples
+            const jurosSimples = valor * taxa * prazo;
+            const valorTotalSimples = valor + jurosSimples;
+
+            // Juros Composto
+            const jurosComposto = valor * Math.pow(1 + taxa, prazo) - valor;
+            const valorTotalComposto = valor * Math.pow(1 + taxa, prazo);
+
+            // Exibir resultados
+            jurosSimplesSpan.textContent = jurosSimples.toFixed(2);
+            valorTotalSimplesSpan.textContent = valorTotalSimples.toFixed(2);
+            jurosCompostoSpan.textContent = jurosComposto.toFixed(2);
+            valorTotalCompostoSpan.textContent = valorTotalComposto.toFixed(2);
+        });
+    </script>
+</body>
+</html>
